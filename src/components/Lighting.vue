@@ -66,7 +66,7 @@ export default {
     fetch(url, {
       method: "PUT",
       headers: headers,
-      body: JSON.stringify("true"),
+      body: JSON.stringify(true),
     })
       .then((response) => response.json())
       .then((outlet) => console.log(outlet))
