@@ -53,18 +53,24 @@ export default {
     this.classname = "off";
     this.lights = false;
 
-    //let access_token = "Y2hpbmFzcHJvdXQ";
-    let url = "http://192.168.1.100/restapi/relay/outlets/=0,1,4/state/";
+    let url = "http://192.168.1.100/restapi/relay/outlets/1/state/";
     let base64 = "YWRtaW46MTIzNA==";
     let headers = new Headers();
 
-    //headers.append('Content-Type', 'text/json');
+    headers.append("Content-Type", "application/json");
     headers.append("Authorization", "Basic " + base64);
+    //headers.append("Accept", "application/json");
+    //headers.append("X-Requested-With", "XMLHttpRequest");
+    //headers.append("X-CSRF", "x");
 
-    fetch(url, { method: "GET", headers: headers })
+    fetch(url, {
+      method: "PUT",
+      headers: headers,
+      body: JSON.stringify("true"),
+    })
       .then((response) => response.json())
-      .then((outlet) => console.log(outlet));
-    //.done();
+      .then((outlet) => console.log(outlet))
+      .catch((error) => console.log(error));
   },
 };
 </script>
