@@ -1,20 +1,26 @@
 <template>
   <div>
     <h2>Lighting</h2>
-    <button class="on" v-if="outlets[0]" v-on:click="lightsOff(0)">
-      {{ text }}
+    <button class="on" ref="B1" v-if="outlets[0]" v-on:click="lightsOff(0)">
+      LIGHT 1
     </button>
-    <button class="off" v-else v-on:click="lightsOn(0)">LIGHT 1</button>
+    <button class="off" ref="B1" v-else v-on:click="lightsOn(0)">
+      LIGHT 1
+    </button>
 
-    <button class="on" v-if="outlets[1]" v-on:click="lightsOff(1)">
+    <button class="on" ref="B2" v-if="outlets[1]" v-on:click="lightsOff(1)">
       LIGHT 2
     </button>
-    <button class="off" v-else v-on:click="lightsOn(1)">LIGHT 2</button>
+    <button class="off" ref="B2" v-else v-on:click="lightsOn(1)">
+      LIGHT 2
+    </button>
 
-    <button class="on" v-if="outlets[2]" v-on:click="lightsOff(2)">
+    <button class="on" ref="B3" v-if="outlets[2]" v-on:click="lightsOff(2)">
       LIGHT 3
     </button>
-    <button class="off" v-else v-on:click="lightsOn(2)">LIGHT 3</button>
+    <button class="off" ref="B3" v-else v-on:click="lightsOn(2)">
+      LIGHT 3
+    </button>
   </div>
 </template>
 
@@ -44,7 +50,8 @@ export default {
   ///////////////////////////////////////////////////////////////////////////////
   methods: {
     lightsOn(outlet) {
-      this.text = "...";
+      //this.$refs.$1.innerText = "...";
+      this.$refs[`B${outlet + 1}`].innerText = "...";
       this.$forceUpdate();
       let url = `https://192.168.1.100/restapi/relay/outlets/${outlet}/state/`;
       let base64 = "YWRtaW46MTIzNA==";
@@ -64,12 +71,13 @@ export default {
         .then((response) => response.text())
         .then(() => (this.outlets[outlet] = true))
         .then(() => this.$forceUpdate())
-        .then(() => (this.text = `LIGHT  ${outlet + 1}`))
-
+        .then(() => (this.$refs[`B${outlet + 1}`].innerText = "LIGHT  1"))
         .catch((error) => console.log(error));
     },
 
     lightsOff(outlet) {
+      //this.$refs.$outlet.innerText = "...";
+      this.$refs[`B${outlet + 1}`].innerText = "...";
       let url = `https://192.168.1.100/restapi/relay/outlets/${outlet}/state/`;
       let base64 = "YWRtaW46MTIzNA==";
       let headers = new Headers();
@@ -88,6 +96,7 @@ export default {
         .then((response) => response.text())
         .then(() => (this.outlets[outlet] = false))
         .then(() => this.$forceUpdate())
+        .then(() => (this.$refs[`B${outlet + 1}`].innerText = "LIGHT  1"))
         .catch((error) => console.log(error));
     },
     lightsAll: function () {
