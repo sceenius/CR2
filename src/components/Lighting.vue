@@ -2,7 +2,7 @@
   <div>
     <h2>Lighting</h2>
     <button class="on" v-if="outlets[0]" v-on:click="lightsOff(0)">
-      LIGHT 1
+      {{ text }}
     </button>
     <button class="off" v-else v-on:click="lightsOn(0)">LIGHT 1</button>
 
@@ -35,6 +35,7 @@ export default {
       lights: false,
       classname: "on",
       outlets: {},
+      text: "LIGHT 1",
     };
   },
 
@@ -43,6 +44,8 @@ export default {
   ///////////////////////////////////////////////////////////////////////////////
   methods: {
     lightsOn(outlet) {
+      this.text = "...";
+      this.$forceUpdate();
       let url = `https://192.168.1.100/restapi/relay/outlets/${outlet}/state/`;
       let base64 = "YWRtaW46MTIzNA==";
       let headers = new Headers();
@@ -59,8 +62,10 @@ export default {
         body: JSON.stringify(true),
       })
         .then((response) => response.text())
-        .then((outlets) => (this.outlets[outlet] = true))
-        .then((outlets) => this.$forceUpdate())
+        .then(() => (this.outlets[outlet] = true))
+        .then(() => this.$forceUpdate())
+        .then(() => (this.text = `LIGHT  ${outlet + 1}`))
+
         .catch((error) => console.log(error));
     },
 
@@ -81,9 +86,8 @@ export default {
         body: JSON.stringify(false),
       })
         .then((response) => response.text())
-
-        .then((outlets) => (this.outlets[outlet] = false))
-        .then((outlets) => this.$forceUpdate())
+        .then(() => (this.outlets[outlet] = false))
+        .then(() => this.$forceUpdate())
         .catch((error) => console.log(error));
     },
     lightsAll: function () {
