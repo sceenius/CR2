@@ -1,11 +1,20 @@
 <template>
   <div>
     <h2>Lighting</h2>
-    <button class="off" v-if="outlet[0]" v-on:click="lightsOff()">
+    <button class="on" v-if="outlets[0]" v-on:click="lightsOff(0)">
       LIGHT 1
     </button>
-    <button class="on" v-else v-on:click="lightsOn()">LIGHT 1</button>
-    {{ outlet[0] }}
+    <button class="off" v-else v-on:click="lightsOn(0)">LIGHT 1</button>
+
+    <button class="on" v-if="outlets[1]" v-on:click="lightsOff(1)">
+      LIGHT 2
+    </button>
+    <button class="off" v-else v-on:click="lightsOn(1)">LIGHT 2</button>
+
+    <button class="on" v-if="outlets[2]" v-on:click="lightsOff(2)">
+      LIGHT 3
+    </button>
+    <button class="off" v-else v-on:click="lightsOn(2)">LIGHT 3</button>
   </div>
 </template>
 
@@ -13,7 +22,6 @@
 export default {
   name: "Lighting",
   getHoursCondition: String,
-  lights: false,
   classname: "on",
   props: {},
 
@@ -26,7 +34,7 @@ export default {
       getHoursCondition: "", //define the variable first
       lights: false,
       classname: "on",
-      outlet: {},
+      outlets: {},
     };
   },
 
@@ -34,31 +42,7 @@ export default {
   //  METHODS
   ///////////////////////////////////////////////////////////////////////////////
   methods: {
-    lightsOn(outlets) {
-      this.lights = true;
-      this.classname = "on";
-      let url = `https://192.168.1.100/restapi/relay/outlets/${outlet}/state/`;
-      let base64 = "YWRtaW46MTIzNA==";
-      let headers = new Headers();
-
-      headers.append("Content-Type", "application/json");
-      headers.append("Authorization", "Basic " + base64);
-      //headers.append("Accept", "application/json");
-      //headers.append("X-Requested-With", "XMLHttpRequest");
-      //headers.append("X-CSRF", "x");
-
-      fetch(url, {
-        method: "PUT",
-        headers: headers,
-        body: JSON.stringify(false),
-      })
-        .then((response) => response.json())
-        .then((outlet) => console.log(outlet))
-        .catch((error) => console.log(error));
-    },
-    lightsOff(outlet) {
-      this.lights = false;
-      this.classname = "off";
+    lightsOn(outlet) {
       let url = `https://192.168.1.100/restapi/relay/outlets/${outlet}/state/`;
       let base64 = "YWRtaW46MTIzNA==";
       let headers = new Headers();
@@ -74,8 +58,46 @@ export default {
         headers: headers,
         body: JSON.stringify(true),
       })
+        .then((response) => response.text())
+        .then((outlets) => (this.outlets[outlet] = true))
+        .then((outlets) => this.$forceUpdate())
+        .catch((error) => console.log(error));
+    },
+
+    lightsOff(outlet) {
+      let url = `https://192.168.1.100/restapi/relay/outlets/${outlet}/state/`;
+      let base64 = "YWRtaW46MTIzNA==";
+      let headers = new Headers();
+
+      headers.append("Content-Type", "application/json");
+      headers.append("Authorization", "Basic " + base64);
+      //headers.append("Accept", "application/json");
+      //headers.append("X-Requested-With", "XMLHttpRequest");
+      //headers.append("X-CSRF", "x");
+
+      fetch(url, {
+        method: "PUT",
+        headers: headers,
+        body: JSON.stringify(false),
+      })
+        .then((response) => response.text())
+
+        .then((outlets) => (this.outlets[outlet] = false))
+        .then((outlets) => this.$forceUpdate())
+        .catch((error) => console.log(error));
+    },
+    lightsAll: function () {
+      let url = "https://192.168.1.100/restapi/relay/outlets/all;/state/";
+      let base64 = "YWRtaW46MTIzNA==";
+      let headers = new Headers();
+
+      headers.append("Content-Type", "application/json");
+      headers.append("Authorization", "Basic " + base64);
+
+      fetch(url, { method: "GET", headers: headers })
         .then((response) => response.json())
-        .then((outlet) => console.log(outlet))
+        .then((outlets) => (this.outlets = outlets))
+        .then((outlets) => console.log(outlets))
         .catch((error) => console.log(error));
     },
   },
@@ -84,17 +106,7 @@ export default {
   //  MOUNTED
   ///////////////////////////////////////////////////////////////////////////////
   mounted() {
-    let url = "https://192.168.1.100/restapi/relay/outlets/all;/state/";
-    let base64 = "YWRtaW46MTIzNA==";
-    let headers = new Headers();
-
-    headers.append("Content-Type", "application/json");
-    headers.append("Authorization", "Basic " + base64);
-
-    fetch(url, { method: "GET", headers: headers })
-      .then((response) => response.json())
-      .then((outlet) => console.log(outlet))
-      .catch((error) => console.log(error));
+    this.lightsAll();
   },
 };
 </script>
@@ -117,7 +129,7 @@ a {
 
 button {
   background-color: #F1C232;
-  width: 300px;
+  width: 200px;
   border: none;
   color: #fff;
   padding: 20px;
@@ -132,9 +144,12 @@ button {
 
 .on {
   opacity: 1;
-  box-shadow: 0 5px 15px rgba(255, 255, 255, 1);
+  border: none;
+  /* box-shadow: 0 5px 15px rgba(255, 255, 255, 1); */
 }
 .off {
+  background-color: transparent;
+  border: 1px solid white;
   opacity: 0.9;
 }
 </style>
