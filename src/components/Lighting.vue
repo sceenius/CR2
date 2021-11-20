@@ -50,7 +50,6 @@ export default {
   ///////////////////////////////////////////////////////////////////////////////
   methods: {
     lightsOn(outlet) {
-      //this.$refs.$1.innerText = "...";
       this.$refs[`B${outlet + 1}`].innerText = "...";
       this.$forceUpdate();
       let url = `https://192.168.1.100/restapi/relay/outlets/${outlet}/state/`;
@@ -76,7 +75,6 @@ export default {
     },
 
     lightsOff(outlet) {
-      //this.$refs.$outlet.innerText = "...";
       this.$refs[`B${outlet + 1}`].innerText = "...";
       let url = `https://192.168.1.100/restapi/relay/outlets/${outlet}/state/`;
       let base64 = "YWRtaW46MTIzNA==";
@@ -99,6 +97,7 @@ export default {
         .then(() => (this.$refs[`B${outlet + 1}`].innerText = "LIGHT  1"))
         .catch((error) => console.log(error));
     },
+
     lightsAll: function () {
       let url = "https://192.168.1.100/restapi/relay/outlets/all;/state/";
       let base64 = "YWRtaW46MTIzNA==";
@@ -162,7 +161,7 @@ button {
 }
 .off {
   background-color: transparent;
-  border: 1px solid white;
+  border: 2px solid white;
   opacity: 0.9;
 }
 </style>
