@@ -70,7 +70,10 @@ export default {
         .then((response) => response.text())
         .then(() => (this.outlets[outlet] = true))
         .then(() => this.$forceUpdate())
-        .then(() => (this.$refs[`B${outlet + 1}`].innerText = "LIGHT  1"))
+        .then(
+          () =>
+            (this.$refs[`B${outlet + 1}`].innerText = `LIGHT B${outlet + 1}`)
+        )
         .catch((error) => console.log(error));
     },
 
@@ -94,7 +97,10 @@ export default {
         .then((response) => response.text())
         .then(() => (this.outlets[outlet] = false))
         .then(() => this.$forceUpdate())
-        .then(() => (this.$refs[`B${outlet + 1}`].innerText = "LIGHT  1"))
+        .then(
+          () =>
+            (this.$refs[`B${outlet + 1}`].innerText = `LIGHT B${outlet + 1}`)
+        )
         .catch((error) => console.log(error));
     },
 
