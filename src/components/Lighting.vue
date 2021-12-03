@@ -71,8 +71,7 @@ export default {
         .then(() => (this.outlets[outlet] = true))
         .then(() => this.$forceUpdate())
         .then(
-          () =>
-            (this.$refs[`B${outlet + 1}`].innerText = `LIGHT B${outlet + 1}`)
+          () => (this.$refs[`B${outlet + 1}`].innerText = `LIGHT ${outlet + 1}`)
         )
         .catch((error) => console.log(error));
     },
@@ -98,13 +97,13 @@ export default {
         .then(() => (this.outlets[outlet] = false))
         .then(() => this.$forceUpdate())
         .then(
-          () =>
-            (this.$refs[`B${outlet + 1}`].innerText = `LIGHT B${outlet + 1}`)
+          () => (this.$refs[`B${outlet + 1}`].innerText = `LIGHT ${outlet + 1}`)
         )
         .catch((error) => console.log(error));
     },
 
     lightsAll: function () {
+      // Both requesting site and API call must be secure
       let url = "https://192.168.1.100/restapi/relay/outlets/all;/state/";
       let base64 = "YWRtaW46MTIzNA==";
       let headers = new Headers();
