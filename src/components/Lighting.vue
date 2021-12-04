@@ -52,7 +52,7 @@ export default {
     lightsOn(outlet) {
       this.$refs[`B${outlet + 1}`].innerText = "...";
       this.$forceUpdate();
-      let url = `https://192.168.1.100/restapi/relay/outlets/${outlet}/state/`;
+      let url = `https://201.182.226.142:5000/restapi/relay/outlets/${outlet}/state/`;
       let base64 = "YWRtaW46MTIzNA==";
       let headers = new Headers();
 
@@ -78,7 +78,7 @@ export default {
 
     lightsOff(outlet) {
       this.$refs[`B${outlet + 1}`].innerText = "...";
-      let url = `https://192.168.1.100/restapi/relay/outlets/${outlet}/state/`;
+      let url = `https://201.182.226.142:5000/restapi/relay/outlets/${outlet}/state/`;
       let base64 = "YWRtaW46MTIzNA==";
       let headers = new Headers();
 
@@ -104,7 +104,8 @@ export default {
 
     lightsAll: function () {
       // Both requesting site and API call must be secure
-      let url = "https://192.168.1.100/restapi/relay/outlets/all;/state/";
+      let url =
+        "https://201.182.226.142:5000/restapi/relay/outlets/all;/state/";
       let base64 = "YWRtaW46MTIzNA==";
       let headers = new Headers();
 
